@@ -69,61 +69,61 @@ const SearchAnime = ({ watched, setWatched, watchlist, setWatchlist }) => {
 
   return (
     <SafeAreaView className="h-full">
-    <View style={tw`flex-1 p-4`}>
-      <TextInput
-        style={tw`border p-2 mb-4`}
-        placeholder="Search for an anime..."
-        value={query}
-        onChangeText={setQuery}
-      />
-      <Button title="Search" onPress={searchAnime} />
-      <FlatList
-        data={results}
-        keyExtractor={(item) => item.mal_id.toString()}
-        renderItem={({ item }) => (
-          <View style={tw`flex-row p-2 border-b items-center`}>
-            <Image
-              source={{ uri: item.images.jpg.image_url }}
-              style={tw`w-16 h-16 rounded mr-4`}
-            />
-            <View style={tw`flex-1`}>
-              <Text style={tw`text-lg`}>{item.title}</Text>
+      <View style={tw`flex-1 p-3`}>
+        <TextInput
+          style={tw`border p-2 mb-4`}
+          placeholder="Search for an anime..."
+          value={query}
+          onChangeText={setQuery}
+        />
+        <Button title="Search" onPress={searchAnime} />
+        <FlatList
+          data={results}
+          keyExtractor={(item) => item.mal_id.toString()}
+          renderItem={({ item }) => (
+            <View style={tw`flex-row p-2 border-b items-center`}>
+              <Image
+                source={{ uri: item.images.jpg.image_url }}
+                style={tw`w-16 h-16 rounded mr-4`}
+              />
+              <View style={tw`flex-1`}>
+                <Text style={tw`text-lg`}>{item.title}</Text>
+              </View>
+              <TouchableOpacity
+                style={tw`bg-green-500 p-2 rounded mr-2`}
+                onPress={() => addToWatched(item)}
+              >
+                <Text style={tw`text-white`}>Watched</Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={tw`bg-blue-500 p-2 rounded`}
+                onPress={() => addToWatchlist(item)}
+              >
+                <Text style={tw`text-white`}>Watchlist</Text>
+              </TouchableOpacity>
+              <TouchableOpacity onPress={() => showModal(item)}>
+                <Text style={tw`text-blue-500`}>Details</Text>
+              </TouchableOpacity>
             </View>
-            <TouchableOpacity
-              style={tw`bg-green-500 p-2 rounded mr-2`}
-              onPress={() => addToWatched(item)}
-            >
-              <Text style={tw`text-white`}>Watched</Text>
-            </TouchableOpacity>
-            <TouchableOpacity
-              style={tw`bg-blue-500 p-2 rounded`}
-              onPress={() => addToWatchlist(item)}
-            >
-              <Text style={tw`text-white`}>Watchlist</Text>
-            </TouchableOpacity>
-            <TouchableOpacity onPress={() => showModal(item)}>
-              <Text style={tw`text-blue-500`}>Details</Text>
-            </TouchableOpacity>
-          </View>
-        )}
-      />
+          )}
+        />
 
-      <Modal isVisible={isModalVisible} onBackdropPress={hideModal}>
-        {selectedAnime && (
-          <View style={tw`bg-white p-4 rounded`}>
-            <Image
-              source={{ uri: selectedAnime.images.jpg.image_url }}
-              style={tw`w-full h-64 rounded mb-4`}
-            />
-            <Text style={tw`text-xl font-bold mb-2`}>
-              {selectedAnime.title}
-            </Text>
-            <Text style={tw`text-sm`}>{selectedAnime.synopsis}</Text>
-            <Button title="Close" onPress={hideModal} />
-          </View>
-        )}
-      </Modal>
-    </View>
+        <Modal isVisible={isModalVisible} onBackdropPress={hideModal}>
+          {selectedAnime && (
+            <View style={tw`bg-white p-4 rounded`}>
+              <Image
+                source={{ uri: selectedAnime.images.jpg.image_url }}
+                style={tw`w-full h-64 rounded mb-4`}
+              />
+              <Text style={tw`text-xl font-bold mb-2`}>
+                {selectedAnime.title}
+              </Text>
+              <Text style={tw`text-sm`}>{selectedAnime.synopsis}</Text>
+              <Button title="Close" onPress={hideModal} />
+            </View>
+          )}
+        </Modal>
+      </View>
     </SafeAreaView>
   );
 };
