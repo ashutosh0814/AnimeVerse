@@ -209,10 +209,10 @@ const AlbumPage = () => {
           />
         )}
         <TouchableOpacity
-          className="absolute bottom-7 right-5 bg-slate-600 p-4 rounded-full"
+          className="absolute bottom-7 right-5 bg-[#FFDB5C] p-4 rounded-full"
           onPress={selectImage}
         >
-          <Ionicons name="add" size={30} color="#fff" />
+          <Ionicons name="add" size={30} color="black" />
         </TouchableOpacity>
 
         {selectedImage && (
@@ -230,7 +230,7 @@ const AlbumPage = () => {
                 resizeMode="contain"
               />
               {notes[selectedImage] && (
-                <View style={tw`absolute top-2 left-2 right-0 bg-black p-2`}>
+                <View style={tw`absolute top-2 left-2 right-0 bg-transparent p-2`}>
                   <Text style={tw`text-white text-xs`}>
                     {notes[selectedImage].date}
                   </Text>
@@ -241,19 +241,19 @@ const AlbumPage = () => {
               )}
               <View style={tw`absolute bottom-10 flex-row`}>
                 <TouchableOpacity
-                  style={tw`bg-slate-600 p-4 m-2 rounded-full `}
+                  style={tw`bg-[#FFDB5C] p-4 m-2 rounded-full `}
                   onPress={() => deleteImage(selectedImage)}
                 >
-                  <Ionicons name="trash" size={25} color="#fff" />
+                  <Ionicons name="trash" size={25} color="black" />
                 </TouchableOpacity>
                 <TouchableOpacity
-                  style={tw`bg-slate-600 p-4 m-2 rounded-full`}
+                  style={tw`bg-[#FFDB5C] p-4 m-2 rounded-full`}
                   onPress={() => {
                     setNoteText(notes[selectedImage]?.text || "");
                     setIsNoteModalVisible(true);
                   }}
                 >
-                  <Ionicons name="create" size={25} color="#fff" />
+                  <Ionicons name="create" size={25} color="##FFDB5C" />
                 </TouchableOpacity>
               </View>
             </View>
@@ -265,11 +265,12 @@ const AlbumPage = () => {
             visible={isNoteModalVisible}
             transparent={true}
             onRequestClose={() => setIsNoteModalVisible(false)}
+            className="bg-slate-500"
           >
             <View
-              style={tw`flex-1 justify-center items-center bg-black bg-opacity-75`}
+              style={tw`flex-1 justify-center items-center bg-black bg-opacity-60`}
             >
-              <View style={tw`bg-slate-200 p-6 rounded-sm w-10/12`}>
+              <View style={tw`bg-slate-400 p-6 rounded-md w-10/12`}>
                 <Text style={tw`text-lg mb-4`}>Add/Edit Note</Text>
                 <TextInput
                   style={tw`border border-gray-300 p-2 mb-4 rounded`}
@@ -280,10 +281,10 @@ const AlbumPage = () => {
                   placeholder="Enter your note here..."
                 />
                 <TouchableOpacity
-                  style={tw`bg-slate-600 p-3 rounded-full`}
+                  style={tw`bg-[#FFDB5C] p-3 rounded-full`}
                   onPress={handleSaveNote}
                 >
-                  <Text style={tw`text-white text-center`}>Save Note</Text>
+                  <Text style={tw`text-black text-center`}>Save Note</Text>
                 </TouchableOpacity>
               </View>
             </View>

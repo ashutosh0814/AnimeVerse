@@ -15,7 +15,12 @@ const TabIcon = ({ icon, color, name, focused }) => {
 const TabsLayout = () => {
   return (
     <>
-      <Tabs screenOptions={{tabBarShowLabel: false}}>
+      <Tabs screenOptions={{
+          tabBarShowLabel: false,
+          tabBarStyle: {
+            backgroundColor: '#FFDB5C',
+          },
+        }} >
         <Tabs.Screen
           name="album"
           options={{
