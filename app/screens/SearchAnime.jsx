@@ -7,6 +7,7 @@ import {
   TouchableOpacity,
   ActivityIndicator,
   Dimensions,
+  ScrollView,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import {
@@ -16,10 +17,15 @@ import {
   Portal,
   Provider,
   Snackbar,
+  Card,
 } from "react-native-paper";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { debounce } from "lodash";
 import tw from "twrnc";
+import {
+  widthPercentageToDP as wp,
+  heightPercentageToDP as hp,
+} from "react-native-responsive-screen";
 
 const { width, height } = Dimensions.get("window");
 
@@ -33,6 +39,7 @@ const SearchAnime = ({ watched, setWatched, watchlist, setWatchlist }) => {
   const [error, setError] = useState(null);
   const [snackbarVisible, setSnackbarVisible] = useState(false);
   const [snackbarMessage, setSnackbarMessage] = useState("");
+  const [showFullDescription, setShowFullDescription] = useState(false);
 
   useEffect(() => {
     loadAnimeLists();
@@ -110,9 +117,13 @@ const SearchAnime = ({ watched, setWatched, watchlist, setWatchlist }) => {
     if (!watchlist.some((item) => item.id === anime.id)) {
       const updatedWatchlist = [...watchlist, anime];
       setWatchlist(updatedWatchlist);
-      await AsyncStorage.setItem("watchlist", JSON.stringify(updatedWatchlist));
-      setSnackbarMessage("Added to Watchlist");
-      setSnackbarVisible(true);
+      try {
+        await AsyncStorage.setItem("watchlist", JSON.stringify(updatedWatchlist));
+        setSnackbarMessage("Added to Watchlist");
+        setSnackbarVisible(true);
+      } catch (error) {
+        console.error("Error updating AsyncStorage:", error);
+      }
     }
   };
 
@@ -136,6 +147,17 @@ const SearchAnime = ({ watched, setWatched, watchlist, setWatchlist }) => {
   const hideModal = () => {
     setIsModalVisible(false);
     setSelectedAnime(null);
+    setShowFullDescription(false);
+  };
+
+  const getDescriptionText = (description) => {
+    if (!description) return "";
+    const descriptionWithoutHTML = description.replace(/<[^>]+>/g, "");
+    const descriptionWords = descriptionWithoutHTML.split(" ");
+    if (descriptionWords.length > 50 && !showFullDescription) {
+      return descriptionWords.slice(0, 50).join(" ") + "...";
+    }
+    return descriptionWithoutHTML.replace(/<br>/g, "\n");
   };
 
   return (
@@ -146,13 +168,11 @@ const SearchAnime = ({ watched, setWatched, watchlist, setWatchlist }) => {
           value={query}
           onChangeText={setQuery}
           mode="flat"
-          style={[
-            tw`mb-4 bg-yellow-300`,
-            { borderColor: "transparent" },
-          ]}
+          style={[tw`mb-4 bg-yellow-300`, { borderColor: "transparent" }]}
           theme={{
             colors: { text: "black", primary: "black", placeholder: "black" },
           }}
+          className="font-psemibold"
         />
         {query && (
           <TouchableOpacity
@@ -179,7 +199,7 @@ const SearchAnime = ({ watched, setWatched, watchlist, setWatchlist }) => {
                       setShowSuggestions(false);
                     }}
                   >
-                    <Text style={tw`text-white p-2 bg-gray-800`}>
+                    <Text style={tw`text-white p-1.2 bg-gray-800`} className="font-pregular">
                       {item.title.english || item.title.romaji}
                     </Text>
                   </TouchableOpacity>
@@ -198,11 +218,11 @@ const SearchAnime = ({ watched, setWatched, watchlist, setWatchlist }) => {
                     source={{ uri: item.coverImage.large }}
                     style={[
                       tw`rounded mr-4`,
-                      { width: width * 0.2, height: height * 0.1 },
+                      { width: wp("20%"), height: hp("10%") },
                     ]}
                   />
                   <View style={tw`flex-1`}>
-                    <Text style={[tw`text-white`, { fontSize: width * 0.035 }]}>
+                    <Text className="font-pregular" style={[tw`text-white`, { fontSize: wp("3.5%") }]}>
                       {item.title.english || item.title.romaji}
                     </Text>
                   </View>
@@ -210,7 +230,7 @@ const SearchAnime = ({ watched, setWatched, watchlist, setWatchlist }) => {
                     style={tw`bg-green-600 p-2 rounded mr-2`}
                     onPress={() => addToWatched(item)}
                   >
-                    <Text style={[tw`text-white`, { fontSize: width * 0.027 }]}>
+                    <Text style={[tw`text-white`, { fontSize: wp("3%") }]}>
                       Watched
                     </Text>
                   </TouchableOpacity>
@@ -218,7 +238,7 @@ const SearchAnime = ({ watched, setWatched, watchlist, setWatchlist }) => {
                     style={tw`bg-blue-500 p-2 rounded mr-2`}
                     onPress={() => addToWatchlist(item)}
                   >
-                    <Text style={[tw`text-white`, { fontSize: width * 0.027 }]}>
+                    <Text style={[tw`text-white`, { fontSize: wp("3%") }]}>
                       Watchlist
                     </Text>
                   </TouchableOpacity>
@@ -226,7 +246,7 @@ const SearchAnime = ({ watched, setWatched, watchlist, setWatchlist }) => {
                     style={tw`bg-yellow-500 p-2 rounded`}
                     onPress={() => showModal(item)}
                   >
-                    <Text style={[tw`text-black`, { fontSize: width * 0.027 }]}>
+                    <Text style={[tw`text-black`, { fontSize: wp("3%") }]}>
                       Details
                     </Text>
                   </TouchableOpacity>
@@ -239,30 +259,58 @@ const SearchAnime = ({ watched, setWatched, watchlist, setWatchlist }) => {
           <Modal
             visible={isModalVisible}
             onDismiss={hideModal}
-            contentContainerStyle={tw`p-4 bg-white rounded`}
+            contentContainerStyle={[
+              tw`p-4 bg-white rounded`,
+              {
+                maxHeight: hp("80%"),
+                borderColor: "black",
+                borderWidth: 1,
+                marginHorizontal: wp("5%"),
+              },
+            ]}
           >
             {selectedAnime && (
-              <View>
-                <Image
-                  source={{ uri: selectedAnime.coverImage.large }}
-                  style={[
-                    tw`rounded mb-4`,
-                    { width: width * 0.9, height: height * 0.3 },
-                  ]}
-                />
-                <Text
-                  style={[
-                    tw`text-xl font-bold mb-2`,
-                    { fontSize: width * 0.06 },
-                  ]}
-                >
-                  {selectedAnime.title.english || selectedAnime.title.romaji}
-                </Text>
-                <Text style={[tw`text-sm`, { fontSize: width * 0.04 }]}>
-                  {selectedAnime.description}
-                </Text>
-                <Button onPress={hideModal}>Close</Button>
-              </View>
+              <Card>
+                <ScrollView contentContainerStyle={tw`p-4`}>
+                  <Card.Cover
+                    source={{ uri: selectedAnime.coverImage.large }}
+                    style={[
+                      tw`rounded mb-4`,
+                      { width: wp("90%"), height: hp("30%") },
+                    ]}
+                  />
+                  <Card.Title
+                    title={
+                      selectedAnime.title.english || selectedAnime.title.romaji
+                    }
+                    titleStyle={[tw`text-black`, { fontSize: wp("5%") }]}
+                  />
+                  <Card.Content>
+                    <Text style={[tw`text-black mb-2`, { fontSize: wp("3%") }]}>
+                      {getDescriptionText(selectedAnime.description)}
+                    </Text>
+                    {selectedAnime.description &&
+                      selectedAnime.description.split(" ").length > 50 && (
+                        <TouchableOpacity
+                          onPress={() =>
+                            setShowFullDescription(!showFullDescription)
+                          }
+                        >
+                          <Text style={tw`text-blue-500`} className="font-pregular">
+                            {showFullDescription ? "Show Less" : "Read More"}
+                          </Text>
+                        </TouchableOpacity>
+                      )}
+                  </Card.Content>
+                  <Button
+                    mode="contained"
+                    onPress={hideModal}
+                    style={tw`mt-4 bg-green-700`}
+                  >
+                    Close
+                  </Button>
+                </ScrollView>
+              </Card>
             )}
           </Modal>
         </Portal>

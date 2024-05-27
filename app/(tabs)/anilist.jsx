@@ -16,7 +16,7 @@ export default function anilist() {
     <SafeAreaView className="h-full">
       <Tab.Navigator
         screenOptions={{
-          tabBarLabelStyle: { fontSize: 12 },
+          tabBarLabelStyle: { fontSize: 14, fontWeight: "600" },
           tabBarStyle: { backgroundColor: "#fff" },
         }}
       >
