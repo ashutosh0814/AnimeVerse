@@ -1,31 +1,28 @@
 {
   "expo": {
-    "name": "native",
-    "slug": "native",
+    "name": "animeverse",
+    "slug": "animeverse",
     "version": "1.0.0",
-    "scheme": "native",
+    "scheme": "animeverse",
     "orientation": "portrait",
-    "icon": "./assets/icon.png",
     "userInterfaceStyle": "light",
-    "splash": {
-      "image": "./assets/splash.png",
-      "resizeMode": "contain",
-      "backgroundColor": "#ffffff"
-    },
     "ios": {
       "supportsTablet": true
     },
     "android": {
-      "adaptiveIcon": {
-        "foregroundImage": "./assets/adaptive-icon.png",
-        "backgroundColor": "#ffffff"
-      }
-    },
-    "web": {
-      "favicon": "./assets/favicon.png"
+      "package": "com.ash_08.animeverse"
     },
     "plugins": [
       "expo-router"
-    ]
+    ],
+    "extra": {
+      "router": {
+        "origin": false
+      },
+      "eas": {
+        "projectId": "4d5baf7e-a974-4c68-b8a9-48c5deb1ee8a"
+      }
+    },
+    "owner": "ash_08"
   }
 }

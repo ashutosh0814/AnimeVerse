@@ -12,6 +12,7 @@ import tw from "twrnc";
 import Modal from "react-native-modal";
 import { SafeAreaView } from "react-native-safe-area-context";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { normalize } from "../responsiveFontSize"; // Adjust the import path as necessary
 
 const Watchlist = ({ watchlist, setWatchlist }) => {
   const [selectedAnime, setSelectedAnime] = useState(null);
@@ -83,7 +84,7 @@ const Watchlist = ({ watchlist, setWatchlist }) => {
                 style={tw`w-16 h-16 rounded mr-4`}
               />
               <Text
-                style={tw`text-lg text-white flex-1`}
+                style={[tw`text-lg text-white flex-1`, { fontSize: normalize(14) }]}
                 className="font-pmedium"
               >
                 {item.title.english || item.title.romaji}
@@ -92,7 +93,7 @@ const Watchlist = ({ watchlist, setWatchlist }) => {
                 onPress={() => showModal(item)}
                 style={tw`ml-auto`}
               >
-                <Text style={tw`text-yellow-400`} className="text-6xl">
+                <Text className="font-pextrabold" style={[tw`text-yellow-400`, { fontSize: normalize(30) }]}>
                   ...
                 </Text>
               </TouchableOpacity>
@@ -100,8 +101,8 @@ const Watchlist = ({ watchlist, setWatchlist }) => {
           )}
         />
 
-        <Modal isVisible={isModalVisible} onBackdropPress={hideModal}>
-          {selectedAnime && (
+        {selectedAnime && (
+          <Modal isVisible={isModalVisible} onBackdropPress={hideModal}>
             <View style={tw`bg-white p-4 rounded`}>
               <ScrollView>
                 <Image
@@ -112,10 +113,10 @@ const Watchlist = ({ watchlist, setWatchlist }) => {
                   }}
                   style={tw`w-full h-64 rounded mb-4`}
                 />
-                <Text style={tw`text-xl font-bold mb-2`}>
+                <Text style={[tw`text-xl font-bold mb-2`, { fontSize: normalize(20) }]}>
                   {selectedAnime.title.english || selectedAnime.title.romaji}
                 </Text>
-                <Text style={tw`text-sm mb-4`} className="font-pregular">
+                <Text style={[tw`text-sm mb-4`, { fontSize: normalize(14) }]} className="font-pregular">
                   {isReadMore
                     ? sanitizeDescription(selectedAnime.description)
                     : `${sanitizeDescription(selectedAnime.description)
@@ -123,10 +124,9 @@ const Watchlist = ({ watchlist, setWatchlist }) => {
                         .slice(0, 50)
                         .join(" ")}...`}
                 </Text>
-                {sanitizeDescription(selectedAnime.description).split(" ")
-                  .length > 50 && (
+                {sanitizeDescription(selectedAnime.description).split(" ").length > 50 && (
                   <TouchableOpacity onPress={() => setIsReadMore(!isReadMore)}>
-                    <Text style={tw`text-blue-500`}>
+                    <Text style={[tw`text-blue-500`, { fontSize: normalize(14) }]}>
                       {isReadMore ? "Read Less" : "Read More"}
                     </Text>
                   </TouchableOpacity>
@@ -141,8 +141,8 @@ const Watchlist = ({ watchlist, setWatchlist }) => {
                 </View>
               </ScrollView>
             </View>
-          )}
-        </Modal>
+          </Modal>
+        )}
       </View>
     </SafeAreaView>
   );

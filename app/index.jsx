@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { useRouter } from "expo-router";
 import { StatusBar } from "expo-status-bar";
 import {
@@ -11,6 +11,7 @@ import {
 } from "react-native";
 import tw from "twrnc";
 import { SafeAreaView } from "react-native-safe-area-context";
+import { normalize } from './responsiveFontSize'; // Adjust the import path as necessary
 
 const { width, height } = Dimensions.get("window");
 
@@ -72,10 +73,10 @@ export default function App() {
         <View style={tw`flex-1 items-center justify-center`}>
           <Text
             style={{
-              fontSize: width * 0.16, // Responsive font size
-              padding: width * 0.05,
+              fontSize: normalize(50), // Adjusted font size using normalize
+              padding: normalize(5), // Adjusted padding using normalize
               color: "#FFF200",
-              marginTop: -height * 0.1,
+              
             }}
             className="font-pextrabold"
           >
@@ -83,23 +84,24 @@ export default function App() {
           </Text>
           <Text
             style={{
-              fontSize: width * 0.15, // Responsive font size
-              padding: width * 0.05,
+              fontSize: normalize(46), // Adjusted font size using normalize
+              padding: normalize(10), // Adjusted padding using normalize
               color: "#41B06E",
-              marginTop: -height * 0.1,
-              fontWeight: 600,
+              fontWeight: "600",
             }}
+            className="font-pextrabold"
           >
             アニメバース
           </Text>
           <StatusBar style="auto" />
           <Text
             style={{
-              fontSize: width * 0.08, // Responsive font size
+              fontSize: normalize(26), // Adjusted font size using normalize
               textAlign: "center",
-              padding: width * 0.02,
+              padding: normalize(5), // Adjusted padding using normalize
               color: "white",
             }}
+            className="font-pmedium"
           >
             Dive into Animeverse: Capture, Explore, and Wear Your Anime Passion!
           </Text>
@@ -108,12 +110,12 @@ export default function App() {
               borderRadius: 9999,
               backgroundColor: "#FFDB5C",
               marginTop: height * 0.08,
-              padding: width * 0.03,
+              padding: normalize(8), // Adjusted padding using normalize
             }}
             className="border-2"
           >
             <TouchableOpacity onPress={handleExploreClick}>
-              <Text style={{ fontSize: width * 0.04, color: "#000" }}>
+              <Text style={{ fontSize: normalize(16), color: "#000" }}>
                 Explore
               </Text>
             </TouchableOpacity>
